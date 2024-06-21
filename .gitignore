@@ -3,3 +3,5 @@
 mods/
 saves/
 node_modules/
+resourcepacks/
+.vscode/
