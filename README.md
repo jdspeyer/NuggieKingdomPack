@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-# NuggieKingdomPack
-lauren was here
-Cole was here too
-=======
 # Nuggie Kingdom Pack Overview
 
 This file will serve as your guide to effectively using GitHub for modpack project management! Exciting stuff! 🎉
