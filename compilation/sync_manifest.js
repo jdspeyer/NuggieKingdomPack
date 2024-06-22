@@ -9,7 +9,7 @@ const fs = require('fs').promises
 const env = require('dotenv').config()
 const { Curseforge } = require('node-curseforge')
 const util = require('util')
-var Git = require('nodegit')
+const exec = util.promisify(require('child_process').exec)
 
 // Access the API key from process.env
 const API_KEY = process.env.API_KEY
@@ -37,6 +37,8 @@ async function main () {
     await checkModExists(manifestFileGameVersion, mod.projectID, mod.fileID)
     console.log(mod.projectID)
   }
+
+  await commitToGitHub()
 }
 
 /**
@@ -59,6 +61,12 @@ async function checkModExists (version, mod, fileID) {
 }
 
 async function downloadModFromCurseForge () {}
+
+async function commitToGitHub () {
+  await exec('git add .')
+  await exec("git commit -m 'Automated commit message from sync_manifest.exe'")
+  await exec('git push')
+}
 
 /// FILE ENTRY POINT
 main()
