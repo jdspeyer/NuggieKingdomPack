@@ -4,4 +4,5 @@ mods/
 saves/
 node_modules/
 resourcepacks/
-.vscode/
+local/
+Test.exe

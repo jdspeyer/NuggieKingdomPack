@@ -9,7 +9,7 @@ const fs = require('fs').promises
 const env = require('dotenv').config()
 const { Curseforge } = require('node-curseforge')
 const util = require('util')
-const exec = util.promisify(require('child_process').exec)
+const { exec } = require('child_process')
 
 // Access the API key from process.env
 const API_KEY = process.env.API_KEY
@@ -19,7 +19,7 @@ const mc = cf.get_game('minecraft')
 
 /// Directories for reference in rest of file.
 const MANIFEST_PATH = '../manifest.json'
-const MOD_PATH = '../mods/'
+const NUGGIE_KINGDOM_PATH = '../../NuggieKingdomPack'
 
 /**
  * Main function for the script.
@@ -38,7 +38,15 @@ async function main () {
     console.log(mod.projectID)
   }
 
-  await commitToGitHub()
+  runCommand('git add .', NUGGIE_KINGDOM_PATH)
+  const commitMessage = 'Your commit message'
+  const gitCommitCommand = `git commit -m "${commitMessage.replace(
+    /"/g,
+    '\\"'
+  )}"` // Es
+  runCommand(gitCommitCommand)
+
+  runCommand('git push', NUGGIE_KINGDOM_PATH)
 }
 
 /**
@@ -62,10 +70,23 @@ async function checkModExists (version, mod, fileID) {
 
 async function downloadModFromCurseForge () {}
 
-async function commitToGitHub () {
-  await exec('git add .')
-  await exec("git commit -m 'Automated commit message from sync_manifest.exe'")
-  await exec('git push')
+// Function to execute a shell command
+function runCommand (command, cwd) {
+  const options = {}
+  if (cwd) {
+    options.cwd = cwd
+  }
+
+  exec(command, options, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`exec error: ${error}`)
+      return
+    }
+    console.log(`stdout: ${stdout}`)
+    if (stderr) {
+      console.error(`stderr: ${stderr}`)
+    }
+  })
 }
 
 /// FILE ENTRY POINT
