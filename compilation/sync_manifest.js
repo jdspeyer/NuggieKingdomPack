@@ -47,6 +47,7 @@ async function main () {
   runCommand(gitCommitCommand)
 
   runCommand('git push', NUGGIE_KINGDOM_PATH)
+  showMessageBox('Test message box!')
 }
 
 /**
@@ -88,6 +89,26 @@ function runCommand (command, cwd) {
     }
   })
 }
+
+function showMessageBox (message) {
+  const psScript = `
+    Add-Type -AssemblyName System.Windows.Forms
+    [System.Windows.Forms.MessageBox]::Show("${message}")
+  `
+  exec(`powershell -Command "${psScript}"`, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`exec error: ${error}`)
+      return
+    }
+    if (stderr) {
+      console.error(`stderr: ${stderr}`)
+    }
+    console.log(`stdout: ${stdout}`)
+  })
+}
+
+// Example usage
+showMessageBox('This is a message box. Click OK to continue.')
 
 /// FILE ENTRY POINT
 main()
