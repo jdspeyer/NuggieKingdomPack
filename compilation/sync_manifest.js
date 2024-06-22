@@ -8,6 +8,8 @@
 const fs = require('fs').promises
 const env = require('dotenv').config()
 const { Curseforge } = require('node-curseforge')
+const util = require('util')
+var Git = require('nodegit')
 
 // Access the API key from process.env
 const API_KEY = process.env.API_KEY
