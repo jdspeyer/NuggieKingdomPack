@@ -1,0 +1,23 @@
+{
+  "minecraft": {
+    "version": "1.18.2",
+    "modLoaders": [
+      {
+        "id": "forge-40.2.0",
+        "primary": true
+      }
+    ]
+  },
+  "manifestType": "minecraftModpack",
+  "manifestVersion": 1,
+  "name": "NuggieKingdomPack",
+  "author": "",
+  "files": [
+    {
+      "projectID": 238222,
+      "fileID": 4593548,
+      "required": true
+    }
+  ],
+  "overrides": "overrides"
+}

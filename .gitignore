@@ -1,0 +1,8 @@
+.curseclient
+.env
+mods/
+saves/
+node_modules/
+resourcepacks/
+local/
+Test.exe
