@@ -19,6 +19,7 @@ const mc = cf.get_game('minecraft')
 
 /// Directories for reference in rest of file.
 const MANIFEST_PATH = '../manifest.json'
+const LOCAL_MANIFEST_PATH = '../local/manifest.json'
 const NUGGIE_KINGDOM_PATH = '../../NuggieKingdomPack'
 
 /**
@@ -29,29 +30,26 @@ async function main () {
   /// Fetch the manifest.json file from the directory (this should be
   /// the main working directory of the repository/ modpack)
   const manifestFileJson = await readManifest(MANIFEST_PATH)
+  const localManifestFileJson = await readManifest(LOCAL_MANIFEST_PATH)
+
+  /// Load in the mod file pointers from the json file
   const manifestFileMods = manifestFileJson.files
+  const localManifestFileMods = localManifestFileJson.files
+
+  /// Set the manifest game version.
   const manifestFileGameVersion = manifestFileJson.minecraft.version
 
   /// Loop through the manifest mods and attempt to download them from the manifest.json file.
   for (const mod of manifestFileMods) {
     await checkModExists(manifestFileGameVersion, mod.projectID, mod.fileID)
-    console.log(mod.projectID)
   }
-
-  runCommand('git add .', NUGGIE_KINGDOM_PATH)
-  const commitMessage = 'Your commit message'
-  const gitCommitCommand = `git commit -m "${commitMessage.replace(
-    /"/g,
-    '\\"'
-  )}"` // Es
-  runCommand(gitCommitCommand)
-
-  runCommand('git push', NUGGIE_KINGDOM_PATH)
-  showMessageBox('Test message box!')
 }
 
 /**
+ *  Reads in the manifest file from the provided path into the working directory of the modpack.
  *
+ * @param {string} path Working directory that will be used to pull in the json file.
+ * @returns JSON object with the mod details.
  */
 async function readManifest (path) {
   try {
@@ -71,7 +69,25 @@ async function checkModExists (version, mod, fileID) {
 
 async function downloadModFromCurseForge () {}
 
-// Function to execute a shell command
+/**
+ *
+ */
+function pushToGitHub () {
+  runCommand('git add .', NUGGIE_KINGDOM_PATH)
+  const commitMessage = 'Your commit message'
+  const gitCommitCommand = `git commit -m "${commitMessage.replace(
+    /"/g,
+    '\\"'
+  )}"` // Es
+  runCommand(gitCommitCommand)
+  runCommand('git push', NUGGIE_KINGDOM_PATH)
+}
+
+/**
+ *
+ * @param {string} command
+ * @param {string} cwd
+ */
 function runCommand (command, cwd) {
   const options = {}
   if (cwd) {
@@ -87,23 +103,6 @@ function runCommand (command, cwd) {
     if (stderr) {
       console.error(`stderr: ${stderr}`)
     }
-  })
-}
-
-function showMessageBox (message) {
-  const psScript = `
-    Add-Type -AssemblyName System.Windows.Forms
-    [System.Windows.Forms.MessageBox]::Show("${message}")
-  `
-  exec(`powershell -Command "${psScript}"`, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`exec error: ${error}`)
-      return
-    }
-    if (stderr) {
-      console.error(`stderr: ${stderr}`)
-    }
-    console.log(`stdout: ${stdout}`)
   })
 }
 
